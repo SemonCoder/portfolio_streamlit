@@ -314,5 +314,3 @@ with tab2:
                 use_container_width=True
             )
         st.markdown('</div>', unsafe_allow_html=True)
-
-    st.info("💡 По вопросам сотрудничества: 8-913-283-19-15")
