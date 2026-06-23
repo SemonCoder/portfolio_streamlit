@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 # --- НАСТРОЙКА СТРАНИЦЫ ---
 st.set_page_config(
@@ -7,108 +8,120 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- СТИЛИ ---
+# --- СТИЛИ (ГРАДИЕНТНЫЙ ФОН) ---
 st.markdown("""
 <style>
+    /* ГЛАВНЫЙ ФОН - КРАСИВЫЙ ГРАДИЕНТ */
     .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         padding: 0 !important;
     }
-
+    
+    /* Убираем белые полоски */
     .main > div {
         padding: 0 !important;
         max-width: 100% !important;
     }
-
+    
     .block-container {
-        padding-top: 0px !important;
+        padding-top: 10px !important;
         padding-bottom: 10px !important;
         padding-left: 20px !important;
         padding-right: 20px !important;
         max-width: 100% !important;
-    }
-
-    header {
         background: transparent !important;
+    }
+    
+    header {
         display: none !important;
     }
-
-    .stApp > header {
-        display: none !important;
-    }
-
-    .stApp .main .block-container:first-child {
-        padding-top: 0 !important;
-        margin-top: 0 !important;
-    }
-
+    
     footer {
         display: none !important;
     }
-
+    
+    /* Вкладки */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background: transparent !important;
     }
-
+    
     .stTabs [data-baseweb="tab"] {
-        background: rgba(255,255,255,0.5) !important;
+        background: rgba(255,255,255,0.25) !important;
         border-radius: 10px !important;
         padding: 8px 20px !important;
+        color: white !important;
+        font-weight: bold !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
     }
-
+    
     .stTabs [aria-selected="true"] {
         background: rgba(255,255,255,0.9) !important;
+        color: #333 !important;
+        border: 1px solid white !important;
     }
-
+    
+    /* Заголовок */
     .main-header {
         text-align: center;
         padding: 15px;
-        background: rgba(255,255,255,0.7);
+        background: rgba(255,255,255,0.15);
         border-radius: 15px;
         margin-bottom: 15px;
         margin-top: 0px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
     }
-
+    
     .main-header h1 {
         margin: 0 !important;
         padding: 0 !important;
+        color: white !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
-
+    
     .main-header h3 {
         margin: 0 !important;
         padding: 0 !important;
+        color: rgba(255,255,255,0.9) !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
-
+    
+    /* Карточки (прозрачные, но читаемые) */
     .info-card {
-        background: rgba(255,255,255,0.85);
+        background: rgba(255,255,255,0.92);
         padding: 20px 25px;
         border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         margin: 5px 0 10px 0;
     }
-
+    
+    .info-card h3 {
+        color: #333 !important;
+    }
+    
     .info-card p {
         margin: 8px 0 !important;
         line-height: 1.6 !important;
+        color: #333 !important;
     }
-
+    
     .contact-info {
-        background: rgba(240, 244, 255, 0.9);
+        background: rgba(240, 244, 255, 0.95);
         padding: 15px 20px;
         border-radius: 10px;
         border-left: 4px solid #4A90D9;
         margin: 10px 0;
     }
-
+    
     .instruction-box {
-        background: rgba(248, 249, 250, 0.9);
+        background: rgba(248, 249, 250, 0.95);
         padding: 12px 18px;
         border-radius: 10px;
         border: 1px solid #e0e0e0;
         margin: 8px 0;
     }
-
+    
     .step {
         background: #4A90D9;
         color: white;
@@ -119,35 +132,91 @@ st.markdown("""
         font-size: 14px;
         margin-right: 8px;
     }
-
+    
     hr {
         margin: 10px 0 !important;
+        border-color: rgba(0,0,0,0.1) !important;
     }
-
+    
     .app-card {
-        background: rgba(255,255,255,0.85);
+        background: rgba(255,255,255,0.92);
         padding: 20px;
         border-radius: 15px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         margin: 5px 0;
         height: 100%;
         border-left: none !important;
     }
-
+    
+    .app-card h4 {
+        color: #333 !important;
+    }
+    
+    .app-card p {
+        color: #333 !important;
+    }
+    
+    .app-card strong {
+        color: #333 !important;
+    }
+    
+    /* Серая разделительная черта */
     .stColumn {
-        border-right: 3px solid #aaaaaa !important;
+        border-right: 2px solid rgba(255,255,255,0.3) !important;
         padding-right: 20px !important;
     }
-
+    
     .stColumn:last-child {
         border-right: none !important;
         padding-left: 20px !important;
         padding-right: 0px !important;
     }
-
+    
     .stColumn > div {
         padding-left: 0 !important;
         padding-right: 0 !important;
+    }
+    
+    /* Текст внутри карточек */
+    .app-card li {
+        color: #333 !important;
+    }
+    
+    /* Заголовки вкладок */
+    .stMarkdown h3 {
+        color: white !important;
+    }
+    
+    .stMarkdown p {
+        color: rgba(255,255,255,0.9) !important;
+    }
+    
+    /* Кнопки скачивания */
+    .stDownloadButton button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 50px !important;
+        padding: 10px 20px !important;
+        font-weight: bold !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stDownloadButton button:hover {
+        transform: scale(1.02) !important;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.3) !important;
+    }
+    
+    /* Предупреждения */
+    .stAlert {
+        background: rgba(255, 255, 255, 0.9) !important;
+        border-radius: 10px !important;
+    }
+    
+    /* Инфо */
+    .stAlert[data-baseweb="notification"] {
+        background: rgba(255, 255, 255, 0.9) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -170,12 +239,12 @@ with tab1:
         <div class="info-card">
             <h3 style="margin-top: 0;">👋 Привет! Я Семён</h3>
             <p>
-                Меня зовут <strong>Шарнин Семён</strong>, я студент группы <strong>Гр-ИС-944</strong>. 
+                Меня зовут <strong>Шарнин Семён</strong>, я студент группы <strong>Гр-ИС-944</strong>.
                 Учусь на программиста и постепенно превращаю свои идеи в рабочие приложения.
             </p>
             <p>
-                Сейчас я на старте своего пути в IT, но уже успел понять главное: 
-                <strong>программирование — это не просто код, а способ решать реальные задачи</strong>. 
+                Сейчас я на старте своего пути в IT, но уже успел понять главное:
+                <strong>программирование — это не просто код, а способ решать реальные задачи</strong>.
                 Мне нравится создавать что-то полезное — будь то мобильное приложение или десктопная программа.
             </p>
             <hr>
@@ -202,6 +271,8 @@ with tab1:
                     Если вам интересны мои проекты или есть идея — пишите!
                 </p>
                 <p style="margin: 8px 0 0 0;">
+                    📞 <strong>Телефон:</strong> 8-913-283-19-15 &nbsp;&nbsp;|&nbsp;&nbsp;
+                    📍 <strong>Адрес:</strong> г. Кемерово, ул. Терешковой, 35
                 </p>
             </div>
         </div>
@@ -210,7 +281,7 @@ with tab1:
     )
 
 # =====================================================
-# ВКЛАДКА 2: СКАЧАТЬ МОИ ПРИЛОЖЕНИЯ (С ВАШИМИ ФАЙЛАМИ)
+# ВКЛАДКА 2: СКАЧАТЬ МОИ ПРИЛОЖЕНИЯ
 # =====================================================
 with tab2:
     st.markdown("### 📦 Мои разработки")
@@ -218,13 +289,13 @@ with tab2:
 
     col_left, col_right = st.columns(2)
 
-    # ===== ЛЕВАЯ КОЛОНКА: EXE =====
+    # ===== EXE =====
     with col_left:
         st.markdown('<div class="app-card">', unsafe_allow_html=True)
         st.markdown("#### 💻 Десктопное приложение (EXE)")
         st.markdown("""
-        **Описание:**  
-        Приложение для кондитерской. Управление заказами, 
+        **Описание:**
+        Приложение для кондитерской. Управление заказами,
         учёт продукции и работа с клиентами.
 
         **Особенности:**
@@ -244,7 +315,7 @@ with tab2:
             </div>
             """, unsafe_allow_html=True)
 
-        # КНОПКА СКАЧИВАНИЯ EXE (ВАШ ФАЙЛ)
+        # КНОПКА СКАЧИВАНИЯ EXE
         try:
             with open("static/Кондитерская_Desktop.exe", "rb") as file:
                 st.download_button(
@@ -254,25 +325,17 @@ with tab2:
                     mime="application/octet-stream",
                     use_container_width=True
                 )
-        except FileNotFoundError:
-            st.error("❌ Файл не найден! Проверьте, что Кондитерская_Desktop.exe лежит в папке static")
-            st.download_button(
-                label="📥 Скачать EXE",
-                data="",
-                file_name="Кондитерская_Desktop.exe",
-                mime="application/octet-stream",
-                disabled=True,
-                use_container_width=True
-            )
+        except:
+            st.warning("⚠️ EXE файл ещё не загружен")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # ===== ПРАВАЯ КОЛОНКА: APK =====
+    # ===== APK =====
     with col_right:
         st.markdown('<div class="app-card">', unsafe_allow_html=True)
         st.markdown("#### 📱 Мобильное приложение (APK)")
         st.markdown("""
-        **Описание:**  
-        Мобильное приложение для управления заказами кондитерской. 
+        **Описание:**
+        Мобильное приложение для управления заказами кондитерской.
         Клиенты могут просматривать каталог и оформлять заказы.
 
         **Особенности:**
@@ -293,7 +356,7 @@ with tab2:
             </div>
             """, unsafe_allow_html=True)
 
-        # КНОПКА СКАЧИВАНИЯ APK (ВАШ ФАЙЛ)
+        # КНОПКА СКАЧИВАНИЯ APK
         try:
             with open("static/app-debug.apk", "rb") as file:
                 st.download_button(
@@ -303,14 +366,8 @@ with tab2:
                     mime="application/vnd.android.package-archive",
                     use_container_width=True
                 )
-        except FileNotFoundError:
-            st.error("❌ Файл не найден! Проверьте, что app-debug.apk лежит в папке static")
-            st.download_button(
-                label="📥 Скачать APK",
-                data="",
-                file_name="app-debug.apk",
-                mime="application/vnd.android.package-archive",
-                disabled=True,
-                use_container_width=True
-            )
+        except:
+            st.warning("⚠️ APK файл ещё не загружен")
         st.markdown('</div>', unsafe_allow_html=True)
+
+    st.info("💡 По вопросам сотрудничества: 8-913-283-19-15")
