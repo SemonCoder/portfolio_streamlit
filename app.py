@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 
 # --- НАСТРОЙКА СТРАНИЦЫ ---
 st.set_page_config(
@@ -8,16 +7,15 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- СТИЛИ (ГРАДИЕНТНЫЙ ФОН) ---
+# --- СТИЛИ (ЧЁРНЫЙ ТЕКСТ) ---
 st.markdown("""
 <style>
-    /* ГЛАВНЫЙ ФОН - КРАСИВЫЙ ГРАДИЕНТ */
+    /* ГЛАВНЫЙ ФОН - ГРАДИЕНТ */
     .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
         padding: 0 !important;
     }
     
-    /* Убираем белые полоски */
     .main > div {
         padding: 0 !important;
         max-width: 100% !important;
@@ -47,84 +45,97 @@ st.markdown("""
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: rgba(255,255,255,0.25) !important;
+        background: rgba(255,255,255,0.7) !important;
         border-radius: 10px !important;
         padding: 8px 20px !important;
-        color: white !important;
+        color: #333 !important;
         font-weight: bold !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
+        border: 1px solid rgba(0,0,0,0.1) !important;
     }
     
     .stTabs [aria-selected="true"] {
-        background: rgba(255,255,255,0.9) !important;
-        color: #333 !important;
-        border: 1px solid white !important;
+        background: white !important;
+        color: #000 !important;
+        border: 1px solid #333 !important;
     }
     
     /* Заголовок */
     .main-header {
         text-align: center;
         padding: 15px;
-        background: rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.8);
         border-radius: 15px;
         margin-bottom: 15px;
         margin-top: 0px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid rgba(0,0,0,0.1);
     }
     
     .main-header h1 {
         margin: 0 !important;
         padding: 0 !important;
-        color: white !important;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        color: #000 !important;
     }
     
     .main-header h3 {
         margin: 0 !important;
         padding: 0 !important;
-        color: rgba(255,255,255,0.9) !important;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        color: #333 !important;
     }
     
-    /* Карточки (прозрачные, но читаемые) */
+    /* Карточки */
     .info-card {
-        background: rgba(255,255,255,0.92);
+        background: white;
         padding: 20px 25px;
         border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         margin: 5px 0 10px 0;
     }
     
     .info-card h3 {
-        color: #333 !important;
+        color: #000 !important;
     }
     
     .info-card p {
         margin: 8px 0 !important;
         line-height: 1.6 !important;
-        color: #333 !important;
+        color: #000 !important;
+    }
+    
+    .info-card strong {
+        color: #000 !important;
     }
     
     .contact-info {
-        background: rgba(240, 244, 255, 0.95);
+        background: #f0f4ff;
         padding: 15px 20px;
         border-radius: 10px;
         border-left: 4px solid #4A90D9;
         margin: 10px 0;
     }
     
+    .contact-info p {
+        color: #000 !important;
+    }
+    
+    .contact-info strong {
+        color: #000 !important;
+    }
+    
     .instruction-box {
-        background: rgba(248, 249, 250, 0.95);
+        background: #f8f9fa;
         padding: 12px 18px;
         border-radius: 10px;
-        border: 1px solid #e0e0e0;
+        border: 1px solid #ddd;
         margin: 8px 0;
+    }
+    
+    .instruction-box p {
+        color: #000 !important;
     }
     
     .step {
         background: #4A90D9;
-        color: white;
+        color: white !important;
         display: inline-block;
         padding: 2px 10px;
         border-radius: 20px;
@@ -135,34 +146,38 @@ st.markdown("""
     
     hr {
         margin: 10px 0 !important;
-        border-color: rgba(0,0,0,0.1) !important;
+        border-color: #ddd !important;
     }
     
     .app-card {
-        background: rgba(255,255,255,0.92);
+        background: white;
         padding: 20px;
         border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         margin: 5px 0;
         height: 100%;
         border-left: none !important;
     }
     
     .app-card h4 {
-        color: #333 !important;
+        color: #000 !important;
     }
     
     .app-card p {
-        color: #333 !important;
+        color: #000 !important;
     }
     
     .app-card strong {
-        color: #333 !important;
+        color: #000 !important;
     }
     
-    /* Серая разделительная черта */
+    .app-card li {
+        color: #000 !important;
+    }
+    
+    /* Разделительная черта */
     .stColumn {
-        border-right: 2px solid rgba(255,255,255,0.3) !important;
+        border-right: 2px solid #ccc !important;
         padding-right: 20px !important;
     }
     
@@ -177,23 +192,22 @@ st.markdown("""
         padding-right: 0 !important;
     }
     
-    /* Текст внутри карточек */
-    .app-card li {
-        color: #333 !important;
-    }
-    
     /* Заголовки вкладок */
     .stMarkdown h3 {
-        color: white !important;
+        color: #000 !important;
     }
     
     .stMarkdown p {
-        color: rgba(255,255,255,0.9) !important;
+        color: #000 !important;
+    }
+    
+    .stMarkdown strong {
+        color: #000 !important;
     }
     
     /* Кнопки скачивания */
     .stDownloadButton button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background: #4A90D9 !important;
         color: white !important;
         border: none !important;
         border-radius: 50px !important;
@@ -210,13 +224,29 @@ st.markdown("""
     
     /* Предупреждения */
     .stAlert {
-        background: rgba(255, 255, 255, 0.9) !important;
+        background: rgba(255, 255, 255, 0.95) !important;
         border-radius: 10px !important;
+        color: #000 !important;
+    }
+    
+    .stAlert p {
+        color: #000 !important;
     }
     
     /* Инфо */
     .stAlert[data-baseweb="notification"] {
-        background: rgba(255, 255, 255, 0.9) !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        color: #000 !important;
+    }
+    
+    /* Элементы Streamlit */
+    .stMarkdown {
+        color: #000 !important;
+    }
+    
+    /* Списки */
+    ul, ol, li {
+        color: #000 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -237,27 +267,27 @@ with tab1:
     st.markdown(
         """
         <div class="info-card">
-            <h3 style="margin-top: 0;">👋 Привет! Я Семён</h3>
-            <p>
-                Меня зовут <strong>Шарнин Семён</strong>, я студент группы <strong>Гр-ИС-944</strong>.
+            <h3 style="margin-top: 0; color: #000 !important;">👋 Привет! Я Семён</h3>
+            <p style="color: #000 !important;">
+                Меня зовут <strong style="color: #000 !important;">Шарнин Семён</strong>, я студент группы <strong style="color: #000 !important;">Гр-ИС-944</strong>.
                 Учусь на программиста и постепенно превращаю свои идеи в рабочие приложения.
             </p>
-            <p>
+            <p style="color: #000 !important;">
                 Сейчас я на старте своего пути в IT, но уже успел понять главное:
-                <strong>программирование — это не просто код, а способ решать реальные задачи</strong>.
+                <strong style="color: #000 !important;">программирование — это не просто код, а способ решать реальные задачи</strong>.
                 Мне нравится создавать что-то полезное — будь то мобильное приложение или десктопная программа.
             </p>
             <hr>
-            <p><strong>🎯 Чем я занимаюсь сейчас:</strong></p>
-            <p>
-                🎓 Учусь на <strong>2-м курсе</strong> по направлению <strong>"Информационные системы"</strong><br>
-                🐍 Пишу небольшие проекты на <strong>Python</strong><br>
+            <p style="color: #000 !important;"><strong style="color: #000 !important;">🎯 Чем я занимаюсь сейчас:</strong></p>
+            <p style="color: #000 !important;">
+                🎓 Учусь на <strong style="color: #000 !important;">2-м курсе</strong> по направлению <strong style="color: #000 !important;">"Информационные системы"</strong><br>
+                🐍 Пишу небольшие проекты на <strong style="color: #000 !important;">Python</strong><br>
                 📱 Изучаю мобильную разработку<br>
                 💻 Создаю десктопные приложения
             </p>
             <hr>
-            <p><strong>💡 Мои интересы в программировании:</strong></p>
-            <p>
+            <p style="color: #000 !important;"><strong style="color: #000 !important;">💡 Мои интересы в программировании:</strong></p>
+            <p style="color: #000 !important;">
                 📱 Создание мобильных приложений (APK)<br>
                 💻 Разработка десктопного ПО (EXE)<br>
                 🎨 Интерфейсы, которые приятно использовать<br>
@@ -265,14 +295,14 @@ with tab1:
             </p>
             <hr>
             <div class="contact-info">
-                <p style="margin: 0;"><strong>📬 Связь</strong></p>
-                <p style="margin: 5px 0 0 0;">
+                <p style="margin: 0; color: #000 !important;"><strong style="color: #000 !important;">📬 Связь</strong></p>
+                <p style="margin: 5px 0 0 0; color: #000 !important;">
                     Я открыт к общению, советам и сотрудничеству.<br>
                     Если вам интересны мои проекты или есть идея — пишите!
                 </p>
-                <p style="margin: 8px 0 0 0;">
-                    📞 <strong>Телефон:</strong> 8-913-283-19-15 &nbsp;&nbsp;|&nbsp;&nbsp;
-                    📍 <strong>Адрес:</strong> г. Кемерово, ул. Терешковой, 35
+                <p style="margin: 8px 0 0 0; color: #000 !important;">
+                    📞 <strong style="color: #000 !important;">Телефон:</strong> 8-913-283-19-15 &nbsp;&nbsp;|&nbsp;&nbsp;
+                    📍 <strong style="color: #000 !important;">Адрес:</strong> г. Кемерово, ул. Терешковой, 35
                 </p>
             </div>
         </div>
@@ -315,7 +345,6 @@ with tab2:
             </div>
             """, unsafe_allow_html=True)
 
-        # КНОПКА СКАЧИВАНИЯ EXE
         try:
             with open("static/Кондитерская_Desktop.exe", "rb") as file:
                 st.download_button(
@@ -356,7 +385,6 @@ with tab2:
             </div>
             """, unsafe_allow_html=True)
 
-        # КНОПКА СКАЧИВАНИЯ APK
         try:
             with open("static/app-debug.apk", "rb") as file:
                 st.download_button(
