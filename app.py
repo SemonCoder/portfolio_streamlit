@@ -301,7 +301,6 @@ with tab1:
                     Если вам интересны мои проекты или есть идея — пишите!
                 </p>
                 <p style="margin: 8px 0 0 0; color: #000 !important;">
-                    📞 <strong style="color: #000 !important;">Телефон:</strong> 8-913-283-19-15 &nbsp;&nbsp;|&nbsp;&nbsp;
                     📍 <strong style="color: #000 !important;">Адрес:</strong> г. Кемерово, ул. Терешковой, 35
                 </p>
             </div>
