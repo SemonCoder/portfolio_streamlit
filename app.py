@@ -396,5 +396,3 @@ with tab2:
         except:
             st.warning("⚠️ APK файл ещё не загружен")
         st.markdown('</div>', unsafe_allow_html=True)
-
-    st.info("💡 По вопросам сотрудничества: 8-913-283-19-15")
